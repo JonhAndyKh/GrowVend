@@ -205,26 +205,22 @@ export async function registerRoutes(
       const newBalance = user.balance - totalPrice;
       await storage.updateUserBalance(userId, newBalance);
 
-      const purchases = [];
-      for (let i = 0; i < purchasedStockItems.length; i++) {
-        const stockItem = purchasedStockItems[i];
+      // Create all purchases in parallel
+      const purchasePromises = purchasedStockItems.map((stockItem, i) => {
         console.log(`[Purchase] Creating purchase record ${i + 1}/${purchasedStockItems.length} for stock: ${stockItem}`);
-        try {
-          const purchase = await storage.createPurchase({
-            userId,
-            productId: id,
-            productName: product.name,
-            price: product.price,
-            stockData: stockItem,
-          });
+        return storage.createPurchase({
+          userId,
+          productId: id,
+          productName: product.name,
+          price: product.price,
+          stockData: stockItem,
+        }).then(purchase => {
           console.log(`[Purchase] Purchase created:`, purchase.id);
-          purchases.push(purchase);
-        } catch (err) {
-          console.error(`[Purchase] Failed to create purchase ${i + 1}:`, err);
-          throw err;
-        }
-      }
+          return purchase;
+        });
+      });
 
+      const purchases = await Promise.all(purchasePromises);
       console.log(`[Purchase] Total purchases created: ${purchases.length}`);
 
       await storage.createTransaction({
