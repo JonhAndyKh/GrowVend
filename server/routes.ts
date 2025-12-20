@@ -175,7 +175,9 @@ export async function registerRoutes(
       await storage.setResetToken(user.id, resetToken, resetTokenExpiry);
       console.log(`🔐 Reset token created: ${resetToken.substring(0, 8)}...`);
 
-      const resetLink = `${process.env.VITE_FRONTEND_URL || "http://localhost:5000"}/reset-password?token=${resetToken}`;
+      const protocol = req.protocol || 'https';
+      const host = req.get('host') || process.env.REPLIT_DEV_DOMAIN || 'localhost:5000';
+      const resetLink = `${protocol}://${host}/reset-password?token=${resetToken}`;
       console.log(`📤 Sending password reset email...`);
       const emailSent = await sendPasswordResetEmail(user.email, resetLink);
 
