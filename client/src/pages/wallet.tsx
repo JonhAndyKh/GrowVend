@@ -23,7 +23,9 @@ import {
   Loader2,
   User,
   Globe,
-  Pencil
+  Pencil,
+  Eye,
+  EyeOff
 } from "lucide-react";
 import { format } from "date-fns";
 import currencyIcon from "@assets/IMG_2999_1765925106131.png";
@@ -33,6 +35,7 @@ export default function WalletPage() {
   const [showSetGrowId, setShowSetGrowId] = useState(false);
   const [growId, setGrowId] = useState("");
   const [showAllTransactions, setShowAllTransactions] = useState(false);
+  const [showDepositWorld, setShowDepositWorld] = useState(false);
   const { toast } = useToast();
 
   const { data: transactions, isLoading } = useQuery<Transaction[]>({
@@ -140,7 +143,30 @@ export default function WalletPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <Globe className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Deposit World:</span>
-                  <span className="font-semibold text-primary" data-testid="text-deposit-world">{settings.depositWorld}</span>
+                  {showDepositWorld ? (
+                    <>
+                      <span className="font-semibold text-primary" data-testid="text-deposit-world">{settings.depositWorld}</span>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6" 
+                        onClick={() => setShowDepositWorld(false)}
+                        data-testid="button-hide-deposit-world"
+                      >
+                        <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                      </Button>
+                    </>
+                  ) : (
+                    <Button 
+                      variant="ghost" 
+                      size="icon" 
+                      className="h-6 w-6" 
+                      onClick={() => setShowDepositWorld(true)}
+                      data-testid="button-show-deposit-world"
+                    >
+                      <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                    </Button>
+                  )}
                 </div>
               )}
             </div>
