@@ -10,6 +10,7 @@ import AuthPage from "@/pages/auth";
 import HomePage from "@/pages/home";
 import WalletPage from "@/pages/wallet";
 import PurchasesPage from "@/pages/purchases";
+import ChatPage from "@/pages/chat";
 import AdminPage from "@/pages/admin";
 import NotFound from "@/pages/not-found";
 import { Loader2 } from "lucide-react";
@@ -42,6 +43,7 @@ function AppRoutes() {
         <Route path="/" component={HomePage} />
         <Route path="/wallet" component={WalletPage} />
         <Route path="/purchases" component={PurchasesPage} />
+        <Route path="/chat" component={ChatPage} />
         <Route path="/admin">
           {user.isAdmin ? <AdminPage /> : <NotFound />}
         </Route>
