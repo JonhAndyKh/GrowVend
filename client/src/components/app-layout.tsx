@@ -36,7 +36,6 @@ import {
   Store,
   User,
   ExternalLink,
-  MessageSquare,
   CheckCircle2
 } from "lucide-react";
 import { SiDiscord } from "react-icons/si";
@@ -55,7 +54,6 @@ function AppSidebar() {
     { title: "Shop", icon: ShoppingBag, href: "/" },
     { title: "Wallet", icon: Wallet, href: "/wallet" },
     { title: "Purchases", icon: Package, href: "/purchases" },
-    { title: "Chat", icon: MessageSquare, href: "/chat" },
   ];
 
   if (user?.isAdmin) {

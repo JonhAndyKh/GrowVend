@@ -766,51 +766,6 @@ function initRoutes() {
     }
   });
 
-  // Get chat messages
-  app.get("/api/chat", requireAuth, async (req, res) => {
-    try {
-      await connectDB();
-      const messages = await ChatMessageModel.find().sort({ createdAt: -1 }).limit(100);
-      res.json(messages.map(toChatMessage).reverse());
-    } catch (error: any) {
-      console.error("Get chat messages error:", error);
-      res.status(500).json({ message: "Failed to fetch messages" });
-    }
-  });
-
-  // Post a chat message
-  app.post("/api/chat", requireAuth, async (req, res) => {
-    try {
-      await connectDB();
-      const userId = req.session.userId!;
-      const user = await UserModel.findById(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      if (user.isBanned) {
-        return res.status(403).json({ message: "You are banned from chatting" });
-      }
-
-      const parseResult = insertChatMessageSchema.safeParse(req.body);
-      if (!parseResult.success) {
-        return res.status(400).json({ message: parseResult.error.errors[0]?.message || "Invalid message" });
-      }
-
-      const { message } = parseResult.data;
-      const chatMessage = await ChatMessageModel.create({
-        userId: new mongoose.Types.ObjectId(userId),
-        userEmail: user.email,
-        message,
-      });
-      res.status(201).json(toChatMessage(chatMessage));
-    } catch (error: any) {
-      console.error("Create chat message error:", error);
-      res.status(500).json({ message: "Failed to send message" });
-    }
-  });
-
   // Get active slides (public)
   app.get("/api/slides", async (req, res) => {
     try {

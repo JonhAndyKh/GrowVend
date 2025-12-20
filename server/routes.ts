@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { connectDB, mongoose } from "./db";
-import { loginSchema, registerSchema, insertProductSchema, setGrowIdSchema, updateSettingsSchema, insertChatMessageSchema, insertSlideSchema, forgotPasswordSchema, resetPasswordSchema } from "@shared/schema";
+import { loginSchema, registerSchema, insertProductSchema, setGrowIdSchema, updateSettingsSchema, insertSlideSchema, forgotPasswordSchema, resetPasswordSchema } from "@shared/schema";
 import config, { validateConfig } from "./config";
 import { sendPasswordResetEmail } from "./email";
 import crypto from "crypto";
@@ -597,45 +597,6 @@ export async function registerRoutes(
     } catch (error: any) {
       console.error("Update settings error:", error);
       res.status(500).json({ message: "Failed to update settings" });
-    }
-  });
-
-  // Get chat messages
-  app.get("/api/chat", requireAuth, async (req, res) => {
-    try {
-      const messages = await storage.getChatMessages(100);
-      res.json(messages);
-    } catch (error: any) {
-      console.error("Get chat messages error:", error);
-      res.status(500).json({ message: "Failed to fetch messages" });
-    }
-  });
-
-  // Post a chat message
-  app.post("/api/chat", requireAuth, async (req, res) => {
-    try {
-      const userId = req.session.userId!;
-      const user = await storage.getUser(userId);
-      
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      if (user.isBanned) {
-        return res.status(403).json({ message: "You are banned from chatting" });
-      }
-
-      const parseResult = insertChatMessageSchema.safeParse(req.body);
-      if (!parseResult.success) {
-        return res.status(400).json({ message: parseResult.error.errors[0]?.message || "Invalid message" });
-      }
-
-      const { message } = parseResult.data;
-      const chatMessage = await storage.createChatMessage(userId, user.email, message);
-      res.status(201).json(chatMessage);
-    } catch (error: any) {
-      console.error("Create chat message error:", error);
-      res.status(500).json({ message: "Failed to send message" });
     }
   });
 

@@ -50,14 +50,6 @@ export type Transaction = {
   createdAt: Date;
 };
 
-export type ChatMessage = {
-  id: string;
-  userId: string;
-  userEmail: string;
-  message: string;
-  createdAt: Date;
-};
-
 export type Slide = {
   id: string;
   title: string;
@@ -123,10 +115,6 @@ export const insertTransactionSchema = z.object({
   description: z.string(),
 });
 
-export const insertChatMessageSchema = z.object({
-  message: z.string().min(1).max(500),
-});
-
 export const insertSlideSchema = z.object({
   title: z.string().min(1, "Title is required"),
   subtitle: z.string().optional().nullable(),
@@ -154,7 +142,6 @@ export type InsertUser = z.infer<typeof insertUserSchema>;
 export type InsertProduct = z.infer<typeof insertProductSchema>;
 export type InsertPurchase = z.infer<typeof insertPurchaseSchema>;
 export type InsertTransaction = z.infer<typeof insertTransactionSchema>;
-export type InsertChatMessage = z.infer<typeof insertChatMessageSchema>;
 export type InsertSlide = z.infer<typeof insertSlideSchema>;
 export type InsertPendingProduct = z.infer<typeof insertPendingProductSchema>;
 export type ApprovePendingProduct = z.infer<typeof approvePendingProductSchema>;
