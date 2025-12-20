@@ -195,8 +195,7 @@ export default function AuthPage() {
                   data-testid="button-login-tab"
                 >
                   <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Sign In</span>
-                  <span className="sm:hidden">In</span>
+                  <span>Sign In</span>
                 </button>
                 <button
                   type="button"
@@ -209,8 +208,7 @@ export default function AuthPage() {
                   data-testid="button-register-tab"
                 >
                   <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span className="hidden sm:inline">Sign Up</span>
-                  <span className="sm:hidden">Up</span>
+                  <span>Sign Up</span>
                 </button>
               </div>
 
