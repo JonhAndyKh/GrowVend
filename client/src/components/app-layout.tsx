@@ -2,7 +2,6 @@ import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth";
 import { ThemeToggle } from "./theme-toggle";
-import { GlobalChat } from "./global-chat";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -36,7 +35,9 @@ import {
   LogOut, 
   Store,
   User,
-  ExternalLink
+  ExternalLink,
+  MessageSquare,
+  CheckCircle2
 } from "lucide-react";
 import { SiDiscord } from "react-icons/si";
 import currencyIcon from "@assets/IMG_2999_1765925106131.png";
@@ -54,6 +55,7 @@ function AppSidebar() {
     { title: "Shop", icon: ShoppingBag, href: "/" },
     { title: "Wallet", icon: Wallet, href: "/wallet" },
     { title: "Purchases", icon: Package, href: "/purchases" },
+    { title: "Chat", icon: MessageSquare, href: "/chat" },
   ];
 
   if (user?.isAdmin) {
@@ -141,7 +143,10 @@ function AppSidebar() {
             </AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0 overflow-hidden">
-            <p className="text-sm font-medium truncate">{user?.email}</p>
+            <div className="flex items-center gap-1.5">
+              <p className="text-sm font-medium truncate">{user?.email}</p>
+              <CheckCircle2 className="h-4 w-4 text-blue-500 flex-shrink-0" data-testid="badge-verified" />
+            </div>
             <p className="text-xs text-muted-foreground flex items-center gap-1">
               <img src={currencyIcon} alt="" className="w-4 h-4" />
               {user?.balance.toFixed(2) || "0.00"}
@@ -278,7 +283,6 @@ export function AppLayout({ children }: AppLayoutProps) {
           </main>
         </div>
       </div>
-      <GlobalChat />
     </SidebarProvider>
   );
 }
