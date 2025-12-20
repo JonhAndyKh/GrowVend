@@ -10,7 +10,7 @@ export async function sendPasswordResetEmail(
   if (resend && process.env.RESEND_API_KEY) {
     try {
       const response = await resend.emails.send({
-        from: "noreply@vendshop.com",
+        from: "onboarding@resend.dev",
         to,
         subject: "Reset Your VendShop Password",
         html: `
