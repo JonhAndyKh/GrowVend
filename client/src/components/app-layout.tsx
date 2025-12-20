@@ -35,8 +35,7 @@ import {
   LogOut, 
   Store,
   User,
-  ExternalLink,
-  MessageSquare
+  ExternalLink
 } from "lucide-react";
 import { SiDiscord } from "react-icons/si";
 import currencyIcon from "@assets/IMG_2999_1765925106131.png";
@@ -54,7 +53,6 @@ function AppSidebar() {
     { title: "Shop", icon: ShoppingBag, href: "/" },
     { title: "Wallet", icon: Wallet, href: "/wallet" },
     { title: "Purchases", icon: Package, href: "/purchases" },
-    { title: "Chat", icon: MessageSquare, href: "/chat" },
   ];
 
   if (user?.isAdmin) {
