@@ -2,8 +2,7 @@ export async function sendPasswordResetEmail(
   to: string,
   resetLink: string
 ): Promise<boolean> {
-  // TEST MODE: Always log the reset link to console for testing
-  // This allows the forgot password feature to work without valid Gmail credentials
+  // TEST MODE: Log the reset link to console
   console.log("\n" + "=".repeat(80));
   console.log("📧 PASSWORD RESET EMAIL (TEST MODE)");
   console.log("=".repeat(80));
