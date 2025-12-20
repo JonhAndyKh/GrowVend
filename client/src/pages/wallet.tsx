@@ -143,16 +143,21 @@ export default function WalletPage() {
                 <div className="flex items-center gap-2 flex-wrap">
                   <Globe className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm text-muted-foreground">Deposit World:</span>
+                  <span className="font-semibold text-primary" data-testid="text-deposit-world">
+                    {showDepositWorld ? settings.depositWorld : '*'.repeat(settings.depositWorld.length)}
+                  </span>
                   <Button 
                     variant="ghost" 
-                    size="sm"
-                    className="font-semibold text-primary h-auto p-0 hover:bg-transparent"
+                    size="icon" 
+                    className="h-6 w-6" 
                     onClick={() => setShowDepositWorld(!showDepositWorld)}
                     data-testid="button-toggle-deposit-world"
                   >
-                    <span data-testid="text-deposit-world">
-                      {showDepositWorld ? settings.depositWorld : '*'.repeat(settings.depositWorld.length)}
-                    </span>
+                    {showDepositWorld ? (
+                      <EyeOff className="h-3.5 w-3.5 text-muted-foreground" />
+                    ) : (
+                      <Eye className="h-3.5 w-3.5 text-muted-foreground" />
+                    )}
                   </Button>
                 </div>
               )}
