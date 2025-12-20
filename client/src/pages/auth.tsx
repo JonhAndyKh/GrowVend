@@ -172,9 +172,18 @@ export default function AuthPage() {
 
           <Card className="border-0 shadow-xl">
             <CardHeader className="space-y-1 pb-3 sm:pb-4">
-              <CardTitle className="text-xl sm:text-2xl font-bold text-center">
-                {isLogin ? "Welcome back" : "Create an account"}
-              </CardTitle>
+              <div className="flex items-center justify-center gap-2">
+                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/20 flex items-center justify-center">
+                  {isLogin ? (
+                    <LogIn className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  ) : (
+                    <UserPlus className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  )}
+                </div>
+                <CardTitle className="text-xl sm:text-2xl font-bold">
+                  {isLogin ? "Welcome back" : "Create an account"}
+                </CardTitle>
+              </div>
               <CardDescription className="text-xs sm:text-sm text-center">
                 {isLogin 
                   ? "Enter your credentials to access your account" 
@@ -183,32 +192,6 @@ export default function AuthPage() {
             </CardHeader>
 
             <CardContent className="space-y-5 sm:space-y-6">
-              <div className="flex rounded-xl bg-muted/50 p-1 sm:p-1.5 border border-border/50 gap-1">
-                <button
-                  type="button"
-                  onClick={() => { setIsLogin(true); form.reset(); }}
-                  className={`flex-1 flex items-center justify-center py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg transition-all ${
-                    isLogin 
-                      ? "bg-background text-foreground shadow-md" 
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  data-testid="button-login-tab"
-                >
-                  <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => { setIsLogin(false); form.reset(); }}
-                  className={`flex-1 flex items-center justify-center py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg transition-all ${
-                    !isLogin 
-                      ? "bg-background text-foreground shadow-md" 
-                      : "text-muted-foreground hover:text-foreground"
-                  }`}
-                  data-testid="button-register-tab"
-                >
-                  <UserPlus className="w-4 h-4 sm:w-5 sm:h-5" />
-                </button>
-              </div>
 
               <Form {...form}>
                 <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
