@@ -184,14 +184,14 @@ export class DatabaseStorage implements IStorage {
 
   async getUserByEmail(email: string): Promise<User | undefined> {
     await connectDB();
-    const user = await UserModel.findOne({ email });
+    const user = await UserModel.findOne({ email: email.toLowerCase() });
     return user ? toUser(user) : undefined;
   }
 
   async createUser(insertUser: InsertUser & { isAdmin?: boolean }): Promise<User> {
     await connectDB();
     const user = await UserModel.create({
-      email: insertUser.email,
+      email: insertUser.email.toLowerCase(),
       password: insertUser.password,
       isAdmin: insertUser.isAdmin || false,
       balance: 0,

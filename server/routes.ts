@@ -75,7 +75,7 @@ export async function registerRoutes(
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const isAdmin = email === "admin@growvend.com";
+      const isAdmin = email.toLowerCase() === "admin@growvend.com";
       
       const user = await storage.createUser({
         email,
