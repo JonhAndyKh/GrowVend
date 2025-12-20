@@ -164,18 +164,9 @@ export default function AuthPage() {
         <div className="w-full max-w-md space-y-6 sm:space-y-8">
           <Card className="border-0 shadow-xl">
             <CardHeader className="space-y-1 pb-3 sm:pb-4">
-              <div className="flex items-center justify-center gap-2">
-                <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/20 flex items-center justify-center">
-                  {isLogin ? (
-                    <LogIn className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  ) : (
-                    <UserPlus className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                  )}
-                </div>
-                <CardTitle className="text-xl sm:text-2xl font-bold">
-                  {isLogin ? "VendShop" : "Create an account"}
-                </CardTitle>
-              </div>
+              <CardTitle className="text-xl sm:text-2xl font-bold text-center">
+                VendShop
+              </CardTitle>
               <CardDescription className="text-xs sm:text-sm text-center">
                 {isLogin 
                   ? "Enter your credentials to access your account" 
