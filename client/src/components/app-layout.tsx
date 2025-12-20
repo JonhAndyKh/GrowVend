@@ -2,6 +2,7 @@ import { Link, useLocation } from "wouter";
 import { useState, useEffect, useRef } from "react";
 import { useAuth } from "@/lib/auth";
 import { ThemeToggle } from "./theme-toggle";
+import { GlobalChat } from "./global-chat";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
@@ -277,6 +278,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           </main>
         </div>
       </div>
+      <GlobalChat />
     </SidebarProvider>
   );
 }
