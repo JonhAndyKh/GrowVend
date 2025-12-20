@@ -1,17 +1,33 @@
 import nodemailer from "nodemailer";
 
-const transporter = nodemailer.createTransport({
-  service: "gmail",
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
-  },
-});
+let transporter: any = null;
+
+// Initialize transporter if credentials are available
+if (process.env.GMAIL_USER && process.env.GMAIL_APP_PASSWORD) {
+  transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_APP_PASSWORD,
+    },
+  });
+}
 
 export async function sendPasswordResetEmail(
   to: string,
   resetLink: string
 ): Promise<boolean> {
+  // If no email credentials, log to console for testing
+  if (!transporter) {
+    console.log("\n" + "=".repeat(80));
+    console.log("📧 PASSWORD RESET EMAIL (TEST MODE)");
+    console.log("=".repeat(80));
+    console.log(`To: ${to}`);
+    console.log(`Reset Link: ${resetLink}`);
+    console.log("=".repeat(80) + "\n");
+    return true;
+  }
+
   try {
     const mailOptions = {
       from: process.env.GMAIL_USER,
