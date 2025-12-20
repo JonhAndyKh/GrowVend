@@ -32,6 +32,7 @@ export default function WalletPage() {
   const { user, refetchUser } = useAuth();
   const [showSetGrowId, setShowSetGrowId] = useState(false);
   const [growId, setGrowId] = useState("");
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
   const { toast } = useToast();
 
   const { data: transactions, isLoading } = useQuery<Transaction[]>({
@@ -176,30 +177,46 @@ export default function WalletPage() {
                 ))}
               </div>
             ) : transactions && transactions.length > 0 ? (
-              <div className="space-y-2 sm:space-y-3">
-                {transactions.map((transaction) => (
-                  <div
-                    key={transaction.id}
-                    className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/30 hover-elevate transition-all"
-                    data-testid={`transaction-${transaction.id}`}
-                  >
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background flex items-center justify-center border flex-shrink-0">
-                      {getTransactionIcon(transaction.type)}
+              <>
+                <div className="space-y-2 sm:space-y-3">
+                  {transactions
+                    .slice(0, showAllTransactions ? undefined : 7)
+                    .map((transaction) => (
+                    <div
+                      key={transaction.id}
+                      className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4 rounded-lg bg-muted/30 hover-elevate transition-all"
+                      data-testid={`transaction-${transaction.id}`}
+                    >
+                      <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-background flex items-center justify-center border flex-shrink-0">
+                        {getTransactionIcon(transaction.type)}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium truncate text-sm sm:text-base">{transaction.description}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">
+                          {format(new Date(transaction.createdAt), "MMM d, yyyy • h:mm a")}
+                        </p>
+                      </div>
+                      <div className={`font-semibold flex items-center gap-1 text-sm sm:text-base flex-shrink-0 ${getTransactionColor(transaction.type)}`}>
+                        {transaction.type === "purchase" ? "-" : "+"}
+                        <img src={currencyIcon} alt="" className="w-3 h-3 sm:w-4 sm:h-4 inline" />
+                        {Math.abs(transaction.amount).toFixed(2)}
+                      </div>
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate text-sm sm:text-base">{transaction.description}</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">
-                        {format(new Date(transaction.createdAt), "MMM d, yyyy • h:mm a")}
-                      </p>
-                    </div>
-                    <div className={`font-semibold flex items-center gap-1 text-sm sm:text-base flex-shrink-0 ${getTransactionColor(transaction.type)}`}>
-                      {transaction.type === "purchase" ? "-" : "+"}
-                      <img src={currencyIcon} alt="" className="w-3 h-3 sm:w-4 sm:h-4 inline" />
-                      {Math.abs(transaction.amount).toFixed(2)}
-                    </div>
+                  ))}
+                </div>
+                {transactions.length > 7 && !showAllTransactions && (
+                  <div className="pt-2 sm:pt-3">
+                    <Button
+                      onClick={() => setShowAllTransactions(true)}
+                      variant="outline"
+                      className="w-full"
+                      data-testid="button-see-more-transactions"
+                    >
+                      See More
+                    </Button>
                   </div>
-                ))}
-              </div>
+                )}
+              </>
             ) : (
               <div className="text-center py-10 sm:py-12">
                 <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">

@@ -36,6 +36,7 @@ export default function PurchasesPage() {
   const [selectedPurchase, setSelectedPurchase] = useState<Purchase | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [visibleStockIds, setVisibleStockIds] = useState<Set<string>>(new Set());
+  const [showAllPurchases, setShowAllPurchases] = useState(false);
 
   const { data: purchases, isLoading } = useQuery<Purchase[]>({
     queryKey: ["/api/purchases"],
@@ -101,9 +102,12 @@ export default function PurchasesPage() {
             ))}
           </div>
         ) : purchases && purchases.length > 0 ? (
-          <div className="space-y-3 sm:space-y-4">
-            {purchases.map((purchase) => (
-              <Card key={purchase.id} className="overflow-hidden" data-testid={`purchase-card-${purchase.id}`}>
+          <>
+            <div className="space-y-3 sm:space-y-4">
+              {purchases
+                .slice(0, showAllPurchases ? undefined : 7)
+                .map((purchase) => (
+                <Card key={purchase.id} className="overflow-hidden" data-testid={`purchase-card-${purchase.id}`}>
                 <Collapsible>
                   <CollapsibleTrigger asChild>
                     <div className="p-3 sm:p-4 cursor-pointer hover-elevate transition-all">
@@ -183,7 +187,20 @@ export default function PurchasesPage() {
                 </Collapsible>
               </Card>
             ))}
-          </div>
+            </div>
+            {purchases.length > 7 && !showAllPurchases && (
+              <div className="pt-2 sm:pt-3">
+                <Button
+                  onClick={() => setShowAllPurchases(true)}
+                  variant="outline"
+                  className="w-full"
+                  data-testid="button-see-more-purchases"
+                >
+                  See More
+                </Button>
+              </div>
+            )}
+          </>
         ) : (
           <Card>
             <CardContent className="py-12 sm:py-16 text-center">
