@@ -175,9 +175,10 @@ export async function registerRoutes(
       await storage.setResetToken(user.id, resetToken, resetTokenExpiry);
       console.log(`🔐 Reset token created: ${resetToken.substring(0, 8)}...`);
 
-      const protocol = req.protocol || 'https';
-      const host = req.get('host') || process.env.REPLIT_DEV_DOMAIN || 'localhost:5000';
-      const resetLink = `${protocol}://${host}/reset-password?token=${resetToken}`;
+      const baseUrl = process.env.REPLIT_DEV_DOMAIN 
+        ? `https://${process.env.REPLIT_DEV_DOMAIN}`
+        : 'http://localhost:5000';
+      const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
       console.log(`📤 Sending password reset email...`);
       const emailSent = await sendPasswordResetEmail(user.email, resetLink);
 
@@ -196,26 +197,32 @@ export async function registerRoutes(
 
   app.post("/api/auth/reset-password", async (req, res) => {
     try {
+      console.log("🔄 Reset password request received");
       const parseResult = resetPasswordSchema.safeParse(req.body);
       if (!parseResult.success) {
+        console.log("❌ Validation failed:", parseResult.error.errors[0]);
         return res.status(400).json({ message: parseResult.error.errors[0]?.message || "Invalid input" });
       }
 
       const { token, password } = parseResult.data;
+      console.log(`🔍 Looking up token: ${token.substring(0, 20)}...`);
 
       const user = await storage.getUserByResetToken(token);
       if (!user) {
+        console.log("❌ User not found with reset token or token expired");
         return res.status(400).json({ message: "Invalid or expired reset link" });
       }
 
+      console.log(`✅ User found: ${user.id}`);
       const hashedPassword = await bcrypt.hash(password, 10);
 
       await storage.updateUserPassword(user.id, hashedPassword);
       await storage.clearResetToken(user.id);
 
+      console.log("✅ Password reset successfully");
       res.json({ message: "Password reset successfully" });
     } catch (error: any) {
-      console.error("Reset password error:", error);
+      console.error("❌ Reset password error:", error);
       res.status(500).json({ message: "Failed to reset password" });
     }
   });
