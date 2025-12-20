@@ -69,6 +69,7 @@ export default function WalletPage() {
     switch (type) {
       case "topup":
       case "admin_add":
+      case "discord_deposit":
         return <ArrowDownLeft className="h-5 w-5 text-secondary" />;
       case "purchase":
         return <ArrowUpRight className="h-5 w-5 text-destructive" />;
@@ -83,6 +84,7 @@ export default function WalletPage() {
     switch (type) {
       case "topup":
       case "admin_add":
+      case "discord_deposit":
       case "refund":
         return "text-secondary";
       case "purchase":
