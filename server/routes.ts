@@ -5,8 +5,10 @@ import bcrypt from "bcrypt";
 import session from "express-session";
 import MongoStore from "connect-mongo";
 import { connectDB, mongoose } from "./db";
-import { loginSchema, registerSchema, insertProductSchema, setGrowIdSchema, updateSettingsSchema, insertChatMessageSchema, insertSlideSchema } from "@shared/schema";
+import { loginSchema, registerSchema, insertProductSchema, setGrowIdSchema, updateSettingsSchema, insertChatMessageSchema, insertSlideSchema, forgotPasswordSchema, resetPasswordSchema } from "@shared/schema";
 import config, { validateConfig } from "./config";
+import { sendPasswordResetEmail } from "./email";
+import crypto from "crypto";
 
 declare module "express-session" {
   interface SessionData {
@@ -147,6 +149,65 @@ export async function registerRoutes(
 
     const { password: _, ...userWithoutPassword } = user;
     res.json(userWithoutPassword);
+  });
+
+  app.post("/api/auth/forgot-password", async (req, res) => {
+    try {
+      const parseResult = forgotPasswordSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ message: parseResult.error.errors[0]?.message || "Invalid input" });
+      }
+
+      const { email } = parseResult.data;
+
+      const user = await storage.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ message: "No account found with this email" });
+      }
+
+      const resetToken = crypto.randomBytes(32).toString("hex");
+      const resetTokenExpiry = new Date(Date.now() + 3600000);
+
+      await storage.setResetToken(user.id, resetToken, resetTokenExpiry);
+
+      const resetLink = `${process.env.VITE_FRONTEND_URL || "http://localhost:5000"}/reset-password?token=${resetToken}`;
+      const emailSent = await sendPasswordResetEmail(user.email, resetLink);
+
+      if (!emailSent) {
+        return res.status(500).json({ message: "Failed to send reset email" });
+      }
+
+      res.json({ message: "Password reset link sent to your email" });
+    } catch (error: any) {
+      console.error("Forgot password error:", error);
+      res.status(500).json({ message: "Failed to process password reset request" });
+    }
+  });
+
+  app.post("/api/auth/reset-password", async (req, res) => {
+    try {
+      const parseResult = resetPasswordSchema.safeParse(req.body);
+      if (!parseResult.success) {
+        return res.status(400).json({ message: parseResult.error.errors[0]?.message || "Invalid input" });
+      }
+
+      const { token, password } = parseResult.data;
+
+      const user = await storage.getUserByResetToken(token);
+      if (!user) {
+        return res.status(400).json({ message: "Invalid or expired reset link" });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      await storage.updateUserPassword(user.id, hashedPassword);
+      await storage.clearResetToken(user.id);
+
+      res.json({ message: "Password reset successfully" });
+    } catch (error: any) {
+      console.error("Reset password error:", error);
+      res.status(500).json({ message: "Failed to reset password" });
+    }
   });
 
   app.get("/api/products", async (req, res) => {

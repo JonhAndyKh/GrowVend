@@ -41,9 +41,10 @@ Note: The project also contains Drizzle ORM configuration (`drizzle.config.ts`) 
 - User roles: Regular users and Admins (controlled via `isAdmin` flag)
 - Admin-only routes protected by checking user role
 - Ban system for blocking users (`isBanned` flag)
+- Password reset flow: Users can request password reset via `/api/auth/forgot-password`, receive Gmail email with reset link (valid 1 hour), and reset password at `/reset-password?token=<token>`
 
 ### Key Data Models
-- **User**: email, password (hashed), balance, isAdmin, isBanned
+- **User**: email, password (hashed), balance, isAdmin, isBanned, resetToken (for password recovery), resetTokenExpiry
 - **Product**: name, description, price, image, stockData (array of items), category
 - **Purchase**: userId, productId, productName, price, stockData (single item from product)
 - **Transaction**: userId, type, amount, description (tracks wallet activity)
@@ -65,6 +66,7 @@ Note: The project also contains Drizzle ORM configuration (`drizzle.config.ts`) 
 - **Zod**: Runtime type validation for API inputs
 - **bcrypt**: Password hashing
 - **express-session**: Session management
+- **nodemailer**: Email sending for password reset notifications
 
 ### Frontend Libraries
 - **@tanstack/react-query**: Server state management and caching
@@ -78,3 +80,6 @@ Note: The project also contains Drizzle ORM configuration (`drizzle.config.ts`) 
 - `MONGODB_URI`: MongoDB connection string
 - `SESSION_SECRET`: Secret for session encryption (optional, has fallback)
 - `DATABASE_URL`: PostgreSQL URL (for Drizzle, if used)
+- `GMAIL_USER`: Gmail address for sending password reset emails (stored as secret)
+- `GMAIL_APP_PASSWORD`: Gmail app-specific password for authentication (stored as secret)
+- `VITE_FRONTEND_URL`: Frontend URL for password reset links (optional, defaults to http://localhost:5000)

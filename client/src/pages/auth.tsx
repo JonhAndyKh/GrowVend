@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { loginSchema, registerSchema, type LoginInput } from "@shared/schema";
+import { loginSchema, registerSchema, forgotPasswordSchema, type LoginInput, type ForgotPasswordInput } from "@shared/schema";
 import { useAuth } from "@/lib/auth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Mail, Lock, UserPlus, LogIn, Shield, Zap, Wallet, ShoppingBag } from "lucide-react";
+import { Loader2, Mail, Lock, UserPlus, LogIn, Shield, Zap, Wallet, ShoppingBag, ArrowLeft } from "lucide-react";
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [forgotPasswordSubmitting, setForgotPasswordSubmitting] = useState(false);
   const { login, register } = useAuth();
   const { toast } = useToast();
 
@@ -21,6 +24,13 @@ export default function AuthPage() {
     defaultValues: {
       email: "",
       password: "",
+    },
+  });
+
+  const forgotPasswordForm = useForm<ForgotPasswordInput>({
+    resolver: zodResolver(forgotPasswordSchema),
+    defaultValues: {
+      email: "",
     },
   });
 
@@ -63,6 +73,42 @@ export default function AuthPage() {
   const toggleMode = () => {
     setIsLogin(!isLogin);
     form.reset();
+  };
+
+  const onForgotPasswordSubmit = async (data: ForgotPasswordInput) => {
+    setForgotPasswordSubmitting(true);
+    try {
+      const response = await fetch("/api/auth/forgot-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        toast({
+          title: "Error",
+          description: result.message || "Failed to send reset email",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Check your email",
+          description: "Password reset link sent to your inbox",
+        });
+        forgotPasswordForm.reset();
+        setShowForgotPassword(false);
+      }
+    } catch (error: any) {
+      toast({
+        title: "Error",
+        description: error.message || "Failed to send reset email",
+        variant: "destructive",
+      });
+    } finally {
+      setForgotPasswordSubmitting(false);
+    }
   };
 
   return (
@@ -279,6 +325,18 @@ export default function AuthPage() {
               >
                 {isLogin ? "Create a new account" : "Sign in to existing account"}
               </Button>
+
+              {isLogin && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  className="w-full text-xs sm:text-sm text-primary hover:text-primary/80"
+                  onClick={() => setShowForgotPassword(true)}
+                  data-testid="button-forgot-password"
+                >
+                  Forgot password?
+                </Button>
+              )}
             </CardContent>
           </Card>
 
@@ -287,6 +345,73 @@ export default function AuthPage() {
           </p>
         </div>
       </div>
+
+      <Dialog open={showForgotPassword} onOpenChange={setShowForgotPassword}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2">
+              <Mail className="w-4 h-4" />
+              Reset Password
+            </DialogTitle>
+            <DialogDescription>
+              Enter your email address and we'll send you a link to reset your password
+            </DialogDescription>
+          </DialogHeader>
+
+          <Form {...forgotPasswordForm}>
+            <form onSubmit={forgotPasswordForm.handleSubmit(onForgotPasswordSubmit)} className="space-y-4">
+              <FormField
+                control={forgotPasswordForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-sm">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        type="email"
+                        placeholder="name@example.com"
+                        data-testid="input-forgot-password-email"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="flex gap-3 pt-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="flex-1"
+                  onClick={() => setShowForgotPassword(false)}
+                  disabled={forgotPasswordSubmitting}
+                >
+                  Cancel
+                </Button>
+                <Button
+                  type="submit"
+                  className="flex-1"
+                  disabled={forgotPasswordSubmitting}
+                  data-testid="button-send-reset-link"
+                >
+                  {forgotPasswordSubmitting ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Mail className="mr-2 h-4 w-4" />
+                      Send Link
+                    </>
+                  )}
+                </Button>
+              </div>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

@@ -7,6 +7,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { AuthProvider, useAuth } from "@/lib/auth";
 import { AppLayout } from "@/components/app-layout";
 import AuthPage from "@/pages/auth";
+import ResetPasswordPage from "@/pages/reset-password";
 import HomePage from "@/pages/home";
 import WalletPage from "@/pages/wallet";
 import PurchasesPage from "@/pages/purchases";
@@ -34,7 +35,12 @@ function AppRoutes() {
   }
 
   if (!user) {
-    return <AuthPage />;
+    return (
+      <Switch>
+        <Route path="/reset-password" component={ResetPasswordPage} />
+        <Route component={AuthPage} />
+      </Switch>
+    );
   }
 
   return (

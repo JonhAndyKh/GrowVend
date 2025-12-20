@@ -8,6 +8,8 @@ export interface IUser extends Document {
   isAdmin: boolean;
   isBanned: boolean;
   growId?: string;
+  resetToken?: string;
+  resetTokenExpiry?: Date;
   createdAt: Date;
 }
 
@@ -90,6 +92,8 @@ const UserSchema = new Schema<IUser>({
   isAdmin: { type: Boolean, required: true, default: false },
   isBanned: { type: Boolean, required: true, default: false },
   growId: { type: String, unique: true, sparse: true },
+  resetToken: { type: String, sparse: true },
+  resetTokenExpiry: { type: Date },
   createdAt: { type: Date, default: Date.now },
 });
 

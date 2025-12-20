@@ -36,6 +36,8 @@ function toUser(doc: any): User {
     isAdmin: doc.isAdmin,
     isBanned: doc.isBanned,
     growId: doc.growId || null,
+    resetToken: doc.resetToken || null,
+    resetTokenExpiry: doc.resetTokenExpiry || null,
     createdAt: doc.createdAt,
   };
 }
@@ -130,10 +132,14 @@ export interface IStorage {
   getUser(id: string): Promise<User | undefined>;
   getUserByEmail(email: string): Promise<User | undefined>;
   getUserByGrowId(growId: string): Promise<User | undefined>;
+  getUserByResetToken(token: string): Promise<User | undefined>;
   createUser(user: InsertUser & { isAdmin?: boolean }): Promise<User>;
   updateUserBalance(id: string, balance: number): Promise<User | undefined>;
   updateUserBanned(id: string, banned: boolean): Promise<User | undefined>;
   updateUserGrowId(id: string, growId: string): Promise<User | undefined>;
+  updateUserPassword(id: string, hashedPassword: string): Promise<User | undefined>;
+  setResetToken(id: string, token: string, expiry: Date): Promise<User | undefined>;
+  clearResetToken(id: string): Promise<User | undefined>;
   getAllUsers(): Promise<User[]>;
 
   getProduct(id: string): Promise<Product | undefined>;
@@ -220,10 +226,48 @@ export class DatabaseStorage implements IStorage {
     return user ? toUser(user) : undefined;
   }
 
+  async getUserByResetToken(token: string): Promise<User | undefined> {
+    await connectDB();
+    const user = await UserModel.findOne({ 
+      resetToken: token,
+      resetTokenExpiry: { $gt: new Date() }
+    });
+    return user ? toUser(user) : undefined;
+  }
+
+  async setResetToken(id: string, token: string, expiry: Date): Promise<User | undefined> {
+    await connectDB();
+    if (!mongoose.Types.ObjectId.isValid(id)) return undefined;
+    const user = await UserModel.findByIdAndUpdate(
+      id, 
+      { resetToken: token, resetTokenExpiry: expiry }, 
+      { new: true }
+    );
+    return user ? toUser(user) : undefined;
+  }
+
+  async clearResetToken(id: string): Promise<User | undefined> {
+    await connectDB();
+    if (!mongoose.Types.ObjectId.isValid(id)) return undefined;
+    const user = await UserModel.findByIdAndUpdate(
+      id,
+      { resetToken: null, resetTokenExpiry: null },
+      { new: true }
+    );
+    return user ? toUser(user) : undefined;
+  }
+
   async updateUserGrowId(id: string, growId: string): Promise<User | undefined> {
     await connectDB();
     if (!mongoose.Types.ObjectId.isValid(id)) return undefined;
     const user = await UserModel.findByIdAndUpdate(id, { growId: growId.toLowerCase() }, { new: true });
+    return user ? toUser(user) : undefined;
+  }
+
+  async updateUserPassword(id: string, hashedPassword: string): Promise<User | undefined> {
+    await connectDB();
+    if (!mongoose.Types.ObjectId.isValid(id)) return undefined;
+    const user = await UserModel.findByIdAndUpdate(id, { password: hashedPassword }, { new: true });
     return user ? toUser(user) : undefined;
   }
 
