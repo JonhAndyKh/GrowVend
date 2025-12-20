@@ -175,9 +175,27 @@ export async function registerRoutes(
       await storage.setResetToken(user.id, resetToken, resetTokenExpiry);
       console.log(`🔐 Reset token created: ${resetToken.substring(0, 8)}...`);
 
-      const baseUrl = process.env.REPLIT_DEV_DOMAIN 
-        ? `https://${process.env.REPLIT_DEV_DOMAIN}`
-        : 'http://localhost:5000';
+      // Construct the base URL for different deployment environments
+      let baseUrl: string;
+      const host = req.get('host') || '';
+      const forwardedHost = req.get('x-forwarded-host') || '';
+      const forwardedProto = req.get('x-forwarded-proto') || 'https';
+      
+      if (forwardedHost && !forwardedHost.includes('localhost')) {
+        // Use forwarded headers (set by reverse proxy/CDN)
+        baseUrl = `${forwardedProto}://${forwardedHost}`;
+      } else if (process.env.REPLIT_DEV_DOMAIN) {
+        // Replit environment
+        baseUrl = `https://${process.env.REPLIT_DEV_DOMAIN}`;
+      } else if (host && !host.includes('localhost')) {
+        // Direct request to public domain
+        const protocol = req.protocol || 'https';
+        baseUrl = `${protocol}://${host}`;
+      } else {
+        // Fallback for local development
+        baseUrl = 'http://localhost:5000';
+      }
+      
       const resetLink = `${baseUrl}/reset-password?token=${resetToken}`;
       console.log(`📤 Sending password reset email...`);
       const emailSent = await sendPasswordResetEmail(user.email, resetLink);
