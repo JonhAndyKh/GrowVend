@@ -162,14 +162,6 @@ export default function AuthPage() {
 
       <div className="flex-1 flex items-center justify-center px-4 sm:px-6 py-8 sm:py-12 bg-background">
         <div className="w-full max-w-md space-y-6 sm:space-y-8">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-primary via-primary to-blue-600 flex items-center justify-center shadow-md">
-              <ShoppingBag className="h-6 sm:h-7 w-6 sm:w-7 text-white" />
-            </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground">VendShop</h1>
-            <p className="text-xs sm:text-sm text-muted-foreground">Gaming Marketplace</p>
-          </div>
-
           <Card className="border-0 shadow-xl">
             <CardHeader className="space-y-1 pb-3 sm:pb-4">
               <div className="flex items-center justify-center gap-2">
