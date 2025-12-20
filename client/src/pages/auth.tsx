@@ -187,28 +187,26 @@ export default function AuthPage() {
                 <button
                   type="button"
                   onClick={() => { setIsLogin(true); form.reset(); }}
-                  className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                  className={`flex-1 flex items-center justify-center py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg transition-all ${
                     isLogin 
                       ? "bg-background text-foreground shadow-md" 
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                   data-testid="button-login-tab"
                 >
-                  <LogIn className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span>Sign In</span>
+                  <LogIn className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
                 <button
                   type="button"
                   onClick={() => { setIsLogin(false); form.reset(); }}
-                  className={`flex-1 flex items-center justify-center gap-1 sm:gap-2 py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
+                  className={`flex-1 flex items-center justify-center py-2.5 sm:py-3 px-2 sm:px-4 rounded-lg transition-all ${
                     !isLogin 
                       ? "bg-background text-foreground shadow-md" 
                       : "text-muted-foreground hover:text-foreground"
                   }`}
                   data-testid="button-register-tab"
                 >
-                  <UserPlus className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                  <span>Sign Up</span>
+                  <UserPlus className="w-4 h-4 sm:w-5 sm:h-5" />
                 </button>
               </div>
 
