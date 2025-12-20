@@ -173,7 +173,7 @@ export default function AuthPage() {
                   )}
                 </div>
                 <CardTitle className="text-xl sm:text-2xl font-bold">
-                  {isLogin ? "Welcome back" : "Create an account"}
+                  {isLogin ? "VendShop" : "Create an account"}
                 </CardTitle>
               </div>
               <CardDescription className="text-xs sm:text-sm text-center">
