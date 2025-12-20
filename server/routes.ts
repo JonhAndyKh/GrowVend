@@ -153,30 +153,38 @@ export async function registerRoutes(
 
   app.post("/api/auth/forgot-password", async (req, res) => {
     try {
+      console.log("📧 Forgot password request received");
       const parseResult = forgotPasswordSchema.safeParse(req.body);
       if (!parseResult.success) {
         return res.status(400).json({ message: parseResult.error.errors[0]?.message || "Invalid input" });
       }
 
       const { email } = parseResult.data;
+      console.log(`🔍 Looking up user with email: ${email}`);
 
       const user = await storage.getUserByEmail(email);
       if (!user) {
         return res.status(404).json({ message: "No account found with this email" });
       }
 
+      console.log(`✅ User found: ${user.id}`);
+
       const resetToken = crypto.randomBytes(32).toString("hex");
       const resetTokenExpiry = new Date(Date.now() + 3600000);
 
       await storage.setResetToken(user.id, resetToken, resetTokenExpiry);
+      console.log(`🔐 Reset token created: ${resetToken.substring(0, 8)}...`);
 
       const resetLink = `${process.env.VITE_FRONTEND_URL || "http://localhost:5000"}/reset-password?token=${resetToken}`;
+      console.log(`📤 Sending password reset email...`);
       const emailSent = await sendPasswordResetEmail(user.email, resetLink);
 
       if (!emailSent) {
+        console.error("❌ Email sending returned false");
         return res.status(500).json({ message: "Failed to send reset email" });
       }
 
+      console.log(`✅ Password reset email sent successfully`);
       res.json({ message: "Password reset link sent to your email" });
     } catch (error: any) {
       console.error("Forgot password error:", error);
