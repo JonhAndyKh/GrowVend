@@ -6,9 +6,10 @@ export async function sendPasswordResetEmail(
   to: string,
   resetLink: string
 ): Promise<boolean> {
-  // If Resend API key is available, send real email
-  if (resend && process.env.RESEND_API_KEY) {
-    try {
+  try {
+    // If Resend API key is available, send real email
+    if (resend && process.env.RESEND_API_KEY) {
+      console.log("📧 Attempting to send via Resend...");
       const response = await resend.emails.send({
         from: "onboarding@resend.dev",
         to,
@@ -48,26 +49,40 @@ export async function sendPasswordResetEmail(
 
       if (response.error) {
         console.error("❌ Resend email error:", response.error);
+        // If Resend is in test mode, fall back to console logging
+        if ((response.error as any).statusCode === 403) {
+          console.log("⚠️  Resend in test mode - falling back to console logging");
+          console.log("\n" + "=".repeat(80));
+          console.log("📧 PASSWORD RESET EMAIL (RESEND TEST MODE)");
+          console.log("=".repeat(80));
+          console.log(`To: ${to}`);
+          console.log(`Subject: Reset Your VendShop Password`);
+          console.log(`\n🔗 Reset Link: ${resetLink}`);
+          console.log("\n💡 Copy the reset link above and paste it in your browser to test password reset");
+          console.log("ℹ️  Note: Resend is configured in test mode and can only send to daviranzy@gmail.com");
+          console.log("=".repeat(80) + "\n");
+          return true;
+        }
         return false;
       }
 
       console.log(`✅ Password reset email sent via Resend to ${to}`);
       return true;
-    } catch (error) {
-      console.error("❌ Resend error:", error);
-      return false;
     }
-  }
 
-  // Fallback to test mode if no API key
-  console.log("\n" + "=".repeat(80));
-  console.log("📧 PASSWORD RESET EMAIL (TEST MODE)");
-  console.log("=".repeat(80));
-  console.log(`To: ${to}`);
-  console.log(`Subject: Reset Your VendShop Password`);
-  console.log(`\n🔗 Reset Link: ${resetLink}`);
-  console.log("\n💡 Copy the reset link above and paste it in your browser to test password reset");
-  console.log("⚠️  To enable real email sending, set RESEND_API_KEY environment variable");
-  console.log("=".repeat(80) + "\n");
-  return true;
+    // Fallback to test mode if no API key
+    console.log("\n" + "=".repeat(80));
+    console.log("📧 PASSWORD RESET EMAIL (TEST MODE)");
+    console.log("=".repeat(80));
+    console.log(`To: ${to}`);
+    console.log(`Subject: Reset Your VendShop Password`);
+    console.log(`\n🔗 Reset Link: ${resetLink}`);
+    console.log("\n💡 Copy the reset link above and paste it in your browser to test password reset");
+    console.log("⚠️  To enable real email sending, set RESEND_API_KEY environment variable");
+    console.log("=".repeat(80) + "\n");
+    return true;
+  } catch (error) {
+    console.error("❌ Email function error:", error);
+    return false;
+  }
 }
