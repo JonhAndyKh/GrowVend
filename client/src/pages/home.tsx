@@ -222,7 +222,7 @@ export default function HomePage() {
           </div>
         </div>
 
-        <div className="space-y-3 pb-8">
+        <div className="space-y-5 pb-8">
           {isLoading ? (
             [...Array(6)].map((_, i) => (
               <Card key={i} className="p-3 sm:p-4 flex items-center gap-3 shadow-sm">
