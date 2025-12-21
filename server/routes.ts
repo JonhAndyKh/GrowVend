@@ -69,6 +69,11 @@ export async function registerRoutes(
 
       const { email, password } = parseResult.data;
 
+      // Verify email is Gmail (redundant check but good practice)
+      if (!email.toLowerCase().endsWith("@gmail.com")) {
+        return res.status(400).json({ message: "Registration is only available for Gmail accounts" });
+      }
+
       const existing = await storage.getUserByEmail(email);
       if (existing) {
         return res.status(400).json({ message: "Email already registered" });

@@ -191,7 +191,7 @@ export default function AuthPage() {
                             <Input
                               {...field}
                               type="email"
-                              placeholder="name@example.com"
+                              placeholder="name@gmail.com"
                               className="pl-10 h-10 text-sm"
                               autoComplete="email"
                               data-testid="input-email"
@@ -199,6 +199,12 @@ export default function AuthPage() {
                           </div>
                         </FormControl>
                         <FormMessage />
+                        {!isLogin && (
+                          <p className="text-xs text-muted-foreground mt-2 flex items-center gap-2">
+                            <span className="inline-block w-1 h-1 rounded-full bg-muted-foreground" />
+                            Gmail accounts only
+                          </p>
+                        )}
                       </FormItem>
                     )}
                   />

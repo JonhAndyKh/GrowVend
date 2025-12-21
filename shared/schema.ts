@@ -152,7 +152,10 @@ export const loginSchema = z.object({
 });
 
 export const registerSchema = z.object({
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address").refine(
+    (email) => email.toLowerCase().endsWith("@gmail.com"),
+    "Registration is only available for Gmail accounts"
+  ),
   password: z.string().min(6, "Password must be at least 6 characters"),
 });
 
