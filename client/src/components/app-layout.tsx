@@ -272,9 +272,9 @@ export function AppLayout({ children }: AppLayoutProps) {
 
           <main className="flex-1 overflow-auto">
             {children}
-            <footer className="border-t bg-background/50 p-4 sm:p-6 text-center text-xs sm:text-sm text-muted-foreground space-y-2 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
+            <footer className="border-t bg-background/50 px-4 py-2 sm:px-6 sm:py-3 text-center text-xs text-muted-foreground space-y-1 sm:space-y-0 sm:flex sm:items-center sm:justify-between">
               <p>All rights reserved. © 2025 VendShop</p>
-              <a href="https://discord.gg/Jmer3YdKzc" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-colors" data-testid="link-contact-us">
+              <a href="https://discord.gg/Jmer3YdKzc" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline transition-colors text-xs" data-testid="link-contact-us">
                 Contact Us
               </a>
             </footer>
