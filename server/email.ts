@@ -24,7 +24,7 @@ export async function sendPasswordResetEmail(
     const mailOptions = {
       from: process.env.GMAIL_USER,
       to,
-      subject: "Reset Your VendShop Password",
+      subject: "Reset Your GrowVend Password",
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 8px 8px 0 0;">
@@ -33,7 +33,7 @@ export async function sendPasswordResetEmail(
           <div style="background: #f9f9f9; padding: 30px; border-radius: 0 0 8px 8px;">
             <p style="color: #333; font-size: 16px; line-height: 1.6;">Hello,</p>
             <p style="color: #333; font-size: 16px; line-height: 1.6;">
-              We received a request to reset your VendShop password. Click the button below to set a new password. This link will expire in 1 hour.
+              We received a request to reset your GrowVend password. Click the button below to set a new password. This link will expire in 1 hour.
             </p>
             <div style="text-align: center; margin: 30px 0;">
               <a href="${resetLink}" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 30px; text-decoration: none; border-radius: 5px; display: inline-block; font-weight: bold;">
@@ -51,7 +51,7 @@ export async function sendPasswordResetEmail(
               If you didn't request a password reset, please ignore this email. Your account is secure.
             </p>
             <p style="color: #999; font-size: 12px; line-height: 1.6;">
-              VendShop Support Team
+              GrowVend Support Team
             </p>
           </div>
         </div>

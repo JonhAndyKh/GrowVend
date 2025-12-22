@@ -122,7 +122,7 @@ export default function AuthPage() {
           <div className="space-y-8">
             <div className="space-y-6 max-w-md">
               <h2 className="text-4xl font-bold text-foreground leading-tight">
-                Welcome to VendShop
+                Welcome to GrowVend
               </h2>
               
               <div className="space-y-4">
@@ -167,7 +167,7 @@ export default function AuthPage() {
           <Card className="border-0 shadow-lg">
             <CardHeader className="space-y-3 pb-6">
               <CardTitle className="text-2xl sm:text-3xl font-bold text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                VendShop
+                GrowVend
               </CardTitle>
               <CardDescription className="text-sm text-center text-muted-foreground">
                 {isLogin 

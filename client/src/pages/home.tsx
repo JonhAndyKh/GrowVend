@@ -168,7 +168,7 @@ export default function HomePage() {
 
         <div className="bg-muted rounded-lg sm:rounded-xl p-3 sm:p-5 space-y-2 sm:space-y-3">
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-0.5">VendShop Marketplace</h1>
+            <h1 className="text-xl sm:text-2xl font-bold text-foreground mb-0.5">GrowVend Marketplace</h1>
             <p className="text-xs sm:text-sm text-muted-foreground">Buy the highest quality items and accounts.</p>
           </div>
 
