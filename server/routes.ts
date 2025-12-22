@@ -93,8 +93,9 @@ export async function registerRoutes(
       const { password: _, ...userWithoutPassword } = user;
       res.status(201).json(userWithoutPassword);
     } catch (error: any) {
-      console.error("Registration error:", error);
-      res.status(500).json({ message: "Registration failed" });
+      const errorMsg = error?.message || error?.toString() || "Unknown error";
+      console.error("Registration error:", errorMsg, error);
+      res.status(500).json({ message: `Registration error: ${errorMsg}` });
     }
   });
 
@@ -126,8 +127,9 @@ export async function registerRoutes(
       const { password: _, ...userWithoutPassword } = user;
       res.json(userWithoutPassword);
     } catch (error: any) {
-      console.error("Login error:", error);
-      res.status(500).json({ message: "Login failed" });
+      const errorMsg = error?.message || error?.toString() || "Unknown error";
+      console.error("Login error:", errorMsg, error);
+      res.status(500).json({ message: `Login error: ${errorMsg}` });
     }
   });
 

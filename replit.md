@@ -1,12 +1,19 @@
-# Grow4Bot Gaming Marketplace
+# GrowVend Gaming Marketplace
 
 ## Overview
 
-Grow4Bot is a gaming marketplace application for buying and selling digital goods and game items. The platform features user authentication, a wallet system with virtual currency, product browsing and purchasing, and an admin panel for managing products and users.
+GrowVend is a gaming marketplace application for buying and selling digital goods and game items. The platform features user authentication (Gmail-only), a wallet system with virtual currency, product browsing and purchasing, and an admin panel for managing products and users.
+
+## Recent Updates (December 22, 2025)
+
+- **Branding**: Rebranded entire application from VendShop to GrowVend across all files
+- **UI Improvements**: Increased product list spacing (space-y-5) for better visual breathing room
+- **Error Handling**: Improved registration/login error messages to display specific backend error details instead of generic messages
+- **Authentication**: Gmail-only registration enforced (enforced at backend level with proper user feedback)
 
 ## User Preferences
 
-Preferred communication style: Simple, everyday language.
+Preferred communication style: Simple, everyday language. Nintendo-style aesthetic preferred.
 
 ## System Architecture
 
