@@ -54,14 +54,20 @@ export default function AuthPage() {
       let message = "An error occurred";
       if (error?.message) {
         try {
-          const parsed = JSON.parse(error.message.replace(/^\d+:\s*/, ''));
-          message = parsed.message || error.message;
+          // Error format is: "STATUS: {json response}"
+          const jsonStart = error.message.indexOf('{');
+          if (jsonStart !== -1) {
+            const parsed = JSON.parse(error.message.substring(jsonStart));
+            message = parsed.message || error.message;
+          } else {
+            message = error.message.replace(/^\d+:\s*/, '');
+          }
         } catch {
           message = error.message.replace(/^\d+:\s*/, '');
         }
       }
       toast({
-        title: "Unable to sign in",
+        title: isLogin ? "Unable to sign in" : "Unable to create account",
         description: message,
         variant: "destructive",
       });
